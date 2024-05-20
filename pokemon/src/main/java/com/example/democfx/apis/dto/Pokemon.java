@@ -6,7 +6,6 @@ import java.util.List;
 public class Pokemon {
 
     private String name;
-    private String url;
     private PokemonSprite sprites;
     private List<PokemonMove> moves;
 
@@ -24,14 +23,6 @@ public class Pokemon {
 
     public void setMoves(List<PokemonMove> moves) {
         this.moves = moves;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public PokemonSprite getSprites() {
