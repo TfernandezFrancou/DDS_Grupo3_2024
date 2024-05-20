@@ -1,13 +1,9 @@
 package com.example.democfx;
 
 import com.example.democfx.apis.PokemonAPI;
-import com.example.democfx.apis.Pokemones;
-import com.example.democfx.apis.dto.Move;
 
 import java.util.List;
-
-import static com.example.democfx.apis.Pokemones.BULBASAUR;
-import static java.sql.Types.NULL;
+import java.util.Scanner;
 
 public class Application {
 
@@ -15,33 +11,35 @@ public class Application {
 
         Application app = new Application();
 
-        // System.out.println("Movimientos: " + pokemonAPI.ObtenerMovimientosPokemon(BULBASAUR.getIndice()));
+        Scanner scanner = new Scanner(System.in);
 
-        // System.out.println("Pokemones: " + pokemonAPI.ObtenerNombrePokemones());
+        System.out.println("Ingrese un pokemon para obtener su imagen y movimientos: ");
+        String pokemon = scanner.nextLine();
+        pokemon = pokemon.toLowerCase();
 
-        app.DevolverImagenYMovimientosDeUnPokemon("bulbasaur");
+        app.DevolverImagenYMovimientosDeUnPokemon(pokemon);
 
-    }
+        System.out.println("Ingrese un movimiento para obtener los pokemones que lo conocen: ");
+        String movimiento = scanner.nextLine();
+        movimiento = movimiento.toLowerCase();
 
-    public static int obtenerIndicePokemon(String nombrePokemon) {
+        app.DevolverPokemonesPorMovimiento(movimiento);
 
-        nombrePokemon = nombrePokemon.toUpperCase();
-
-        for (Pokemones pokemon : Pokemones.values()) {
-            if (pokemon.name().equals(nombrePokemon)) {
-                return pokemon.getIndice();
-            }
-        }
-        return NULL;
     }
 
     public void DevolverImagenYMovimientosDeUnPokemon(String nombrePokemon) throws Exception{
 
         PokemonAPI pokemonAPI = new PokemonAPI();
 
-        List<String> nombresMovimientos = pokemonAPI.ObtenerMovimientosPokemon(obtenerIndicePokemon(nombrePokemon));
+        List<String> nombresMovimientos = pokemonAPI.ObtenerMovimientosPokemon(nombrePokemon);
         System.out.println("Movimientos del Pokémon: " + nombresMovimientos);
 
-        System.out.println("Pokemones: " + pokemonAPI.ObtenerImagenPokemon(obtenerIndicePokemon(nombrePokemon)));
+        System.out.println("Pokemones: " + pokemonAPI.ObtenerImagenPokemon(nombrePokemon));
+    }
+
+    public void DevolverPokemonesPorMovimiento(String movimiento) throws Exception{
+
+        PokemonAPI pokemonAPI = new PokemonAPI();
+        System.out.println("Pokemones de " + movimiento + ": " + pokemonAPI.ObtenerPokemonesConMovimiento(movimiento));
     }
 }

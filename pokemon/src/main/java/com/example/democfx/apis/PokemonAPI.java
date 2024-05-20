@@ -14,8 +14,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PokemonAPI {
-    public String ObtenerImagenPokemon(Integer idPokemon) throws Exception{
-        WebClient clientUsers = WebClient.create("https://pokeapi.co/api/v2/pokemon/" + idPokemon);
+
+    public List<String> ObtenerPokemonesConMovimiento(String movimiento) throws Exception{
+        WebClient clientUsers = WebClient.create("https://pokeapi.co/api/v2/move/" + movimiento);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        Response response = clientUsers
+                .header("Content-Type", "application/json")
+                .get();
+
+        int status = response.getStatus();
+        System.out.println("Status: " + status);
+
+        String responseBody = response.readEntity(String.class);
+
+        if (status == 200) {
+            Move move = objectMapper.readValue(responseBody, Move.class);
+
+            List<String> pokemonNames = new ArrayList<>();
+            for (Pokemon pokemon : move.getLearned_by_pokemon()) {
+                pokemonNames.add(pokemon.getName());
+            }
+            return pokemonNames;
+
+        } else {
+            System.out.println("Error response = " + responseBody);
+            throw new Exception("Error en la llamada a /api/user");
+        }
+    }
+    public String ObtenerImagenPokemon(String nombrePokemon) throws Exception{
+        WebClient clientUsers = WebClient.create("https://pokeapi.co/api/v2/pokemon/" + nombrePokemon);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -37,8 +66,8 @@ public class PokemonAPI {
             throw new Exception("Error en la llamada a /api/user");
         }
     }
-    public List<String> ObtenerMovimientosPokemon(Integer idPokemon) throws Exception{
-        WebClient clientUsers = WebClient.create("https://pokeapi.co/api/v2/pokemon/" + idPokemon);
+    public List<String> ObtenerMovimientosPokemon(String nombrePokemon) throws Exception{
+        WebClient clientUsers = WebClient.create("https://pokeapi.co/api/v2/pokemon/" + nombrePokemon);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
